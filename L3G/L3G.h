@@ -59,7 +59,7 @@ class L3G
       float x, y, z;
     } vector;
 
-    vector g; // gyro angular velocity readings
+    vector G; // gyro angular velocity readings
 
     bool init(byte device = L3G_DEVICE_AUTO, byte sa0 = L3G_SA0_AUTO);
 

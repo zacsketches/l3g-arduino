@@ -105,9 +105,9 @@ void L3G::read()
   uint8_t zhg = Wire.read();
 
   // combine high and low bytes
-  g.x = (int16_t)(xhg << 8 | xlg);
-  g.y = (int16_t)(yhg << 8 | ylg);
-  g.z = (int16_t)(zhg << 8 | zlg);
+  G.x = (int16_t)(xhg << 8 | xlg);
+  G.y = (int16_t)(yhg << 8 | ylg);
+  G.z = (int16_t)(zhg << 8 | zlg);
 }
 
 void L3G::vector_cross(const vector *a,const vector *b, vector *out)
