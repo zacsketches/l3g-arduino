@@ -1,6 +1,4 @@
 #include <L3G.h>
-#include <Wire.h>
-#include <math.h>
 
 // Defines ////////////////////////////////////////////////////////////////
 
@@ -108,26 +106,6 @@ void L3G::read()
   G.x = (int16_t)(xhg << 8 | xlg);
   G.y = (int16_t)(yhg << 8 | ylg);
   G.z = (int16_t)(zhg << 8 | zlg);
-}
-
-void L3G::vector_cross(const vector *a,const vector *b, vector *out)
-{
-  out->x = a->y*b->z - a->z*b->y;
-  out->y = a->z*b->x - a->x*b->z;
-  out->z = a->x*b->y - a->y*b->x;
-}
-
-float L3G::vector_dot(const vector *a,const vector *b)
-{
-  return a->x*b->x+a->y*b->y+a->z*b->z;
-}
-
-void L3G::vector_normalize(vector *a)
-{
-  float mag = sqrt(vector_dot(a,a));
-  a->x /= mag;
-  a->y /= mag;
-  a->z /= mag;
 }
 
 // Private Methods //////////////////////////////////////////////////////////////

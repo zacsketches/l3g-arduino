@@ -1,7 +1,9 @@
 #ifndef L3G_h
 #define L3G_h
 
-#include <Arduino.h> // for byte data type
+#include <Arduino.h>
+#include <clearinghouse.h>
+#include <Wire.h>
 
 // device types
 
@@ -54,12 +56,8 @@
 class L3G
 {
   public:
-    typedef struct vector
-    {
-      float x, y, z;
-    } vector;
 
-    vector G; // gyro angular velocity readings
+    gw::vector<float> G; // gyro angular velocity readings
 
     bool init(byte device = L3G_DEVICE_AUTO, byte sa0 = L3G_SA0_AUTO);
 
@@ -69,11 +67,6 @@ class L3G
     byte readReg(byte reg);
 
     void read(void);
-
-    // vector functions
-    static void vector_cross(const vector *a, const vector *b, vector *out);
-    static float vector_dot(const vector *a,const vector *b);
-    static void vector_normalize(vector *a);
 
   private:
       byte _device; // chip type (4200D or D20)
