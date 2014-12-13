@@ -1,6 +1,4 @@
 #include <L3G.h>
-#include <Wire.h>
-#include <math.h>
 
 // Defines ////////////////////////////////////////////////////////////////
 
@@ -12,6 +10,23 @@
 #define L3GD20_ADDRESS_SA0_HIGH   (0xD6 >> 1)
 
 // Public Methods //////////////////////////////////////////////////////////////
+
+//constructor
+L3G::L3G(I2C_port::port p)
+{
+  /* 
+	 Configure the I2C_port to work with either Wire or Wire1
+	 on the Arduino Due
+  */
+  wire = &Wire;   //Object Wire is provided in wire.h
+  #if WIRE_INTERFACES_COUNT > 1
+	if(p == I2C_port::secondary) {
+		wire = &Wire1;	//Object Wire1 is provided in wire.h
+	}
+  #endif
+  
+}
+
 
 bool L3G::init(byte device, byte sa0)
 {
@@ -64,10 +79,10 @@ void L3G::enableDefault(void)
 // Writes a gyro register
 void L3G::writeReg(byte reg, byte value)
 {
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.write(value);
-  Wire.endTransmission();
+  wire->beginTransmission(address);
+  wire->write(reg);
+  wire->write(value);
+  wire->endTransmission();
 }
 
 // Reads a gyro register
@@ -75,12 +90,12 @@ byte L3G::readReg(byte reg)
 {
   byte value;
 
-  Wire.beginTransmission(address);
-  Wire.write(reg);
-  Wire.endTransmission();
-  Wire.requestFrom(address, (byte)1);
-  value = Wire.read();
-  Wire.endTransmission();
+  wire->beginTransmission(address);
+  wire->write(reg);
+  wire->endTransmission();
+  wire->requestFrom(address, (byte)1);
+  value = wire->read();
+  wire->endTransmission();
 
   return value;
 }
@@ -88,21 +103,21 @@ byte L3G::readReg(byte reg)
 // Reads the 3 gyro channels and stores them in vector g
 void L3G::read()
 {
-  Wire.beginTransmission(address);
+  wire->beginTransmission(address);
   // assert the MSB of the address to get the gyro
   // to do slave-transmit subaddress updating.
-  Wire.write(L3G_OUT_X_L | (1 << 7));
-  Wire.endTransmission();
-  Wire.requestFrom(address, (byte)6);
+  wire->write(L3G_OUT_X_L | (1 << 7));
+  wire->endTransmission();
+  wire->requestFrom(address, (byte)6);
 
-  while (Wire.available() < 6);
+  while (wire->available() < 6);
 
-  uint8_t xlg = Wire.read();
-  uint8_t xhg = Wire.read();
-  uint8_t ylg = Wire.read();
-  uint8_t yhg = Wire.read();
-  uint8_t zlg = Wire.read();
-  uint8_t zhg = Wire.read();
+  uint8_t xlg = wire->read();
+  uint8_t xhg = wire->read();
+  uint8_t ylg = wire->read();
+  uint8_t yhg = wire->read();
+  uint8_t zlg = wire->read();
+  uint8_t zhg = wire->read();
 
   // combine high and low bytes
   G.x = (int16_t)(xhg << 8 | xlg);

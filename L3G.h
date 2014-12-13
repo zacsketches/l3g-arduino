@@ -2,6 +2,8 @@
 #define L3G_h
 
 #include <Arduino.h> // for byte data type
+#include <Wire.h>
+#include <math.h>
 
 // device types
 
@@ -58,6 +60,16 @@ class L3G
     {
       float x, y, z;
     } vector;
+	
+	//Enum to select port
+	//primary selects I2C0 on Due pins 20 & 21
+	//secondary select I2C1 on the Due near the AREF pin
+	struct I2C_port {
+		enum port{primary, secondary};
+	};
+	
+	//Constructor
+    L3G(I2C_port::port p = I2C_port::primary);
 
     vector G; // gyro angular velocity readings
 
@@ -76,6 +88,7 @@ class L3G
     static void vector_normalize(vector *a);
 
   private:
+  	  TwoWire* wire;
       byte _device; // chip type (4200D or D20)
       byte address;
 
